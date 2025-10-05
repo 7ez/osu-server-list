@@ -11,7 +11,7 @@ export default function SettingsModal(props: { settings: Settings, updateSetting
   return (
     <Dialog>
       {/* admin panel button & the settings button css breaks when you open this. FIX!!!!! */}
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant="ghost" className="hover:cursor-pointer absolute right-3 bottom-3">
           <FontAwesomeIcon width={26} height={18} icon={faGear} />
         </Button>

@@ -1,13 +1,14 @@
 "use client";
 
 import AdminModal from "@/components/admin/admin-modal";
-import ServerCard from "@/components/server-card";
 import SortPicker from "@/components/sort-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import { Server } from "@/types/server";
 import SettingsModal from "@/components/settings-modal";
 import { DEFAULT_SETTINGS, Settings } from "@/types/settings";
+import ServerCardModal from "@/components/server-modal";
+import { isMobile } from "react-device-detect";
 
 export default function Home() {
   const [servers, setServers] = useState<Server[]>([]);
@@ -69,12 +70,12 @@ export default function Home() {
     <div>
       <nav className="flex items-center w-full h-16">
         <h1 className="ml-7 text-center text-sm md:text-xl lg:text-4xl font-extrabold">osu! server list</h1>
-        <div className="max-sm:absolute md:ml-6 max-sm:w-full flex max-sm:justify-center max-sm:ml-9">
-          <SortPicker currentSort={currentSettings.currentSort} setCurrentSort={updateSort} />
+        <div className="flex pr-6 ml-auto z-10">
+          <AdminModal reloadData={reloadData} />
         </div>
 
-        <div className="flex pr-6 ml-auto">
-          <AdminModal reloadData={reloadData} />
+        <div className="max-sm:absolute md:ml-6 max-sm:w-full flex max-sm:justify-center max-sm:ml-9">
+          <SortPicker currentSort={currentSettings.currentSort} setCurrentSort={updateSort} />
         </div>
       </nav>
 
@@ -87,12 +88,12 @@ export default function Home() {
           </>
         ) : (
           servers.map(server => {
-            return <ServerCard key={server.id} server={server} currentSort={currentSettings.currentSort} usesOslProtocol={currentSettings.usesOslProtocol} />;
+            return <ServerCardModal key={server.id} server={server} currentSort={currentSettings.currentSort} usesOslProtocol={currentSettings.usesOslProtocol} />;
           })
         )}
       </div>
 
-      <SettingsModal settings={currentSettings} updateSettings={updateSettings} />
+      {!isMobile && <SettingsModal settings={currentSettings} updateSettings={updateSettings} />}
     </div>
   );
 }

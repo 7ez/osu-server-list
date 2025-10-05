@@ -10,6 +10,7 @@ import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "@/components/ui/badge";
+import { isMobile } from "react-device-detect";
 
 export default function ServerCard(props: { server: Server, currentSort: string, usesOslProtocol: boolean }) {
   return (
@@ -25,8 +26,8 @@ export default function ServerCard(props: { server: Server, currentSort: string,
               className="rounded max-w-16 max-h-16 object-contain"
             />
           </div>
-          <div className="flex-1 min-w-0">
-            <CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap">
+          <div className="min-w-0">
+            <CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap mr-2">
               {props.server.name}
               {props.server.onlineCount > 0 && (props.currentSort === "online" || props.currentSort === "") && (
                 <> {/* i'd use a div but it breaks the css so no thank you */}
@@ -55,7 +56,7 @@ export default function ServerCard(props: { server: Server, currentSort: string,
           </div>
         </div>
       </CardHeader>
-      {props.usesOslProtocol && ( 
+      {props.usesOslProtocol && !isMobile && ( 
         <Button 
           variant="outline" 
           size="sm"

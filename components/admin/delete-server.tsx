@@ -41,7 +41,7 @@ export default function AdminDeleteServer(props: { adminKey: string, server: Ser
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button 
           variant="outline" 
           size="sm"

@@ -1,7 +1,7 @@
 import { Server } from "@/types/server";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckToSlot, faEdit, faIcons, faLink, faSignature, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCheckToSlot, faEdit, faIcons, faKeyboard, faLink, faSignature } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -79,7 +79,7 @@ export default function AdminEditServer(props: { adminKey: string, server: Serve
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button 
           variant="outline" 
           size="sm"
@@ -103,7 +103,7 @@ export default function AdminEditServer(props: { adminKey: string, server: Serve
             </div>
             <Input ref={serverNameInput} placeholder="Enter Server name..." name="server-name" defaultValue={props.server.name} type="text" />
             <div className="flex flex-row gap-2 items-center">
-              <FontAwesomeIcon width={16} height={16} icon={faEdit} />
+              <FontAwesomeIcon width={16} height={16} icon={faKeyboard} />
               <Label htmlFor="server-description" className="font-semibold">Server Description</Label>
             </div>
             <Textarea ref={serverDescriptionInput} placeholder="Enter Server Description..." name="server-description" defaultValue={props.server.description} />
