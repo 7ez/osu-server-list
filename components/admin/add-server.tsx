@@ -1,7 +1,7 @@
 import { Server } from "@/types/server";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckToSlot, faEdit, faIcons, faLink, faSignature, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCheckToSlot, faEdit, faIcons, faLink, faSignature } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { toast } from "sonner";

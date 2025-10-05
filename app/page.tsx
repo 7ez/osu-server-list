@@ -10,13 +10,12 @@ import SettingsModal from "@/components/settings-modal";
 import { DEFAULT_SETTINGS, Settings } from "@/types/settings";
 
 export default function Home() {
-  const [servers, setServers] = useState<any[]>([]);
+  const [servers, setServers] = useState<Server[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [shouldReload, setShouldReload] = useState(false);
   const [currentSettings, setCurrentSettings] = useState<Settings>(DEFAULT_SETTINGS);
 
   function updateSettings(newSettings: Settings, reloadServers: boolean = false) {
-    console.log("called blya");
     localStorage.setItem("settings", JSON.stringify(newSettings));
     setCurrentSettings(newSettings);
     if (reloadServers) {
@@ -47,7 +46,7 @@ export default function Home() {
 
   function updateSort(newSort: string) {
     updateSettings({ ...currentSettings, currentSort: newSort });
-    let sortedServers: Server[] = [...servers];
+    const sortedServers: Server[] = [...servers];
     switch (newSort) {
       case "online":
       default:

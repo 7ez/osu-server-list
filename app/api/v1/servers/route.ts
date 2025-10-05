@@ -50,7 +50,7 @@ async function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function GET(req: NextRequest)
+export async function GET(_: NextRequest)
 {
     return NextResponse.json(servers);
 }
@@ -96,7 +96,7 @@ export async function PATCH(req: NextRequest)
 
 export async function DELETE(req: NextRequest)
 {
-    await sleep(5000);
+    // await sleep(5000);
 
     const adminKey = req.headers.get("x-admin-key");
     if (adminKey !== process.env.ADMIN_KEY) {

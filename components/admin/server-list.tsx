@@ -9,9 +9,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import AdminServerCard from "@/components/admin/server-card";
 import { ScrollArea } from "../ui/scroll-area";
 import AdminAddServer from "./add-server";
+import { Server } from "@/types/server";
 
 export default function AdminServerList(props: { adminKey: string, reloadServers: () => void }) {
-  const [servers, setServers] = useState<any[]>([]);
+  const [servers, setServers] = useState<Server[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [shouldReload, setShouldReload] = useState(false);
 
