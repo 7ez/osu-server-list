@@ -1,11 +1,11 @@
-import { Server } from "@/types/server";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
+import { Server } from "@/app/generated/prisma";
 
 
 export default function AdminDeleteServer(props: { adminKey: string, server: Server, reloadServers: () => void })
@@ -20,7 +20,7 @@ export default function AdminDeleteServer(props: { adminKey: string, server: Ser
 
   function handleDelete() {
     setIsDeleting(true);
-    fetch("/api/v1/servers", {
+    fetch(`/api/v1/servers/${props.server.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

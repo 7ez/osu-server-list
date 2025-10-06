@@ -1,4 +1,3 @@
-import { Server } from "@/types/server";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckToSlot, faIcons, faKeyboard, faLink, faSignature } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Server } from "@/app/generated/prisma";
 
 
 export default function AdminAddServer(props: { adminKey: string, reloadServers: () => void })
@@ -55,16 +55,13 @@ export default function AdminAddServer(props: { adminKey: string, reloadServers:
       serverFeatureInput.current.value = "";
     }
 
-    const server: Server = {
-      id: 67,
+    const server: Partial<Server> = {
       name: serverName,
       description: serverDescription,
       url: serverUrl,
       logoUrl: serverLogo,
       features: serverFeatures,
-      onlineCount: 0,
-      votes: 0,
-    }
+    };
 
     fetch("/api/v1/servers", {
       method: "PUT",

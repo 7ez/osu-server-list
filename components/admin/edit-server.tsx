@@ -1,4 +1,3 @@
-import { Server } from "@/types/server";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckToSlot, faEdit, faIcons, faKeyboard, faLink, faSignature } from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-
+import { Server } from "@/app/generated/prisma";
 
 export default function AdminEditServer(props: { adminKey: string, server: Server, reloadServers: () => void })
 {
@@ -57,7 +56,7 @@ export default function AdminEditServer(props: { adminKey: string, server: Serve
 
     const updatedServer = { ...props.server, features: serverFeatures, name: serverName, url: serverUrl, logoUrl: serverLogo, description: serverDescription };
 
-    fetch("/api/v1/servers", {
+    fetch(`/api/v1/servers/${props.server.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +105,7 @@ export default function AdminEditServer(props: { adminKey: string, server: Serve
               <FontAwesomeIcon width={16} height={16} icon={faKeyboard} />
               <Label htmlFor="server-description" className="font-semibold">Server Description</Label>
             </div>
-            <Textarea ref={serverDescriptionInput} placeholder="Enter Server Description..." name="server-description" defaultValue={props.server.description} />
+            <Textarea ref={serverDescriptionInput} placeholder="Enter Server Description..." name="server-description" defaultValue={props.server.description || ""} />
             <div className="flex flex-row gap-2 items-center">
               <FontAwesomeIcon width={16} height={16} icon={faLink} />
               <Label htmlFor="server-url" className="font-semibold">Server URL</Label>

@@ -1,5 +1,4 @@
 import ServerCard from "@/components/server-card";
-import { Server } from "@/types/server";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { faCheckToSlot, faKeyboard, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { isMobile } from "react-device-detect";
+import { Server } from "@/app/generated/prisma";
 
 export default function ServerCardModal(props: { server: Server, currentSort: string, usesOslProtocol: boolean }) {
   return (
@@ -56,9 +56,10 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
               <div className="flex flex-row gap-24 items-center">
                 <div className="flex flex-row gap-2">
                   <span className="font-bold">{props.server.votes}</span>
+                  <Button variant="ghost" className="px-2 h-6 hover:cursor-pointer">Vote!</Button>
                 </div>
                 <div className="flex flex-row gap-2">
-                  <span className="font-bold">{props.server.onlineCount}</span>
+                  <span className="font-bold">-1</span>
                 </div>
               </div>
           </div>

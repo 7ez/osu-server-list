@@ -5,12 +5,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Server } from "@/types/server";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "@/components/ui/badge";
 import { isMobile } from "react-device-detect";
+import { Server } from "@/app/generated/prisma";
 
 export default function ServerCard(props: { server: Server, currentSort: string, usesOslProtocol: boolean }) {
   return (
@@ -29,12 +29,12 @@ export default function ServerCard(props: { server: Server, currentSort: string,
           <div className="min-w-0">
             <CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap mr-2">
               {props.server.name}
-              {props.server.onlineCount > 0 && (props.currentSort === "online" || props.currentSort === "") && (
-                <> {/* i'd use a div but it breaks the css so no thank you */}
+              {/* {props.server.onlineCount > 0 && (props.currentSort === "online" || props.currentSort === "") && (
+                <> /* i'd use a div but it breaks the css so no thank you *\/
                   <div className="rounded-full ml-2 inline-block w-2 h-2 pb-[1px] bg-green-400"></div>
                   <div className="text-gray-600 inline-block ml-2 text-xs pb-[1px]">{props.server.onlineCount} Online</div>
                 </>
-              )}
+              )} */}
               {props.currentSort === "votes" && (
                 <>
                   <div className="rounded-full ml-2 inline-block w-2 h-2 pb-[1px] bg-green-400"></div>
