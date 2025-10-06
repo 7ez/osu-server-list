@@ -4,11 +4,11 @@ import AdminModal from "@/components/admin/admin-modal";
 import SortPicker from "@/components/sort-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
-import { Server } from "@/types/server";
 import SettingsModal from "@/components/settings-modal";
 import { DEFAULT_SETTINGS, Settings } from "@/types/settings";
 import ServerCardModal from "@/components/server-modal";
 import { isMobile } from "react-device-detect";
+import { Server } from "@/app/generated/prisma";
 
 export default function Home() {
   const [servers, setServers] = useState<Server[]>([]);
@@ -51,7 +51,7 @@ export default function Home() {
     switch (newSort) {
       case "online":
       default:
-        sortedServers.sort((a, b) => b.onlineCount - a.onlineCount);
+        // sortedServers.sort((a, b) => b.onlineCount - a.onlineCount);
         break;
       case "votes":
         sortedServers.sort((a, b) => b.votes - a.votes);
@@ -69,13 +69,15 @@ export default function Home() {
   return (
     <div>
       <nav className="flex items-center w-full h-16">
-        <h1 className="ml-7 text-center text-sm md:text-xl lg:text-4xl font-extrabold">osu! server list</h1>
-        <div className="flex pr-6 ml-auto z-10">
-          <AdminModal reloadData={reloadData} />
-        </div>
+        <h1 className="ml-7 text-sm md:text-xl lg:text-4xl font-extrabold lg:w-86">osu! server list</h1>
+        <div className="flex flex-row lg:flex-row-reverse w-full"> {/* KILL KILL KILL KILL KILL */}
+          <div className="flex pr-6 ml-auto z-10">
+            <AdminModal reloadData={reloadData} />
+          </div>
 
-        <div className="max-sm:absolute md:ml-6 max-sm:w-full flex max-sm:justify-center max-sm:ml-9">
-          <SortPicker currentSort={currentSettings.currentSort} setCurrentSort={updateSort} />
+          <div className="max-sm:absolute md:ml-6 max-sm:w-full flex max-sm:justify-center max-sm:ml-9">
+            <SortPicker currentSort={currentSettings.currentSort} setCurrentSort={updateSort} />
+          </div>
         </div>
       </nav>
 
