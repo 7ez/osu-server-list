@@ -15,6 +15,13 @@ export const serversTable = sqliteTable("servers", {
   votes: int().notNull().default(0),
 });
 
+export const serverAdminKeysTable = sqliteTable("server_admin_keys", {
+  id: int().primaryKey({ autoIncrement: true }),
+  serverId: int().notNull().references(() => serversTable.id),
+  adminKey: text().notNull().unique(),
+  createdAt: int().notNull().default(Date.now()),
+});
+
 export const ipVotesTable = sqliteTable("ip_votes", {
   ipAddress: text().notNull().primaryKey(),
   lastVoted: int().notNull().default(Date.now())

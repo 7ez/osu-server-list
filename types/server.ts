@@ -8,4 +8,5 @@ export type Server = {
   updatedAt: number;
   features?: string;
   votes: number;
+  hasAdminKeys?: boolean;
 };

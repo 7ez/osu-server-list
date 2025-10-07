@@ -1,7 +1,7 @@
 import ServerCard from "@/components/server-card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { faCheckToSlot, faKeyboard, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCheckToSlot, faEdit, faKeyboard, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -11,8 +11,10 @@ import { Server } from "@/types/server";
 import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { ServerAdminModal } from "./server-admin-modal";
 
-function VoteModal(props: { server: Server, usesOslProtocol: boolean }) {
+// move to diff file
+function VoteModal(props: { server: Server, usesOslProtocol: boolean, updateServer: (server: Server) => void }) {
   const [isOpen, setIsOpen] = useState(false);
   const userIdInput = useRef<HTMLInputElement>(null);
 
@@ -26,10 +28,12 @@ function VoteModal(props: { server: Server, usesOslProtocol: boolean }) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ userId: userId })
-    }).then(res => {
+    }).then(async (res) => {
       if (res.status === 200) {
         toast.success("Vote submitted successfully!");
         setIsOpen(false);
+        const updatedServer = await res.json();
+        props.updateServer(updatedServer);
       } else {
         if (res.status === 429) {
           toast.warning("You can only vote once every 24 hours.");
@@ -77,7 +81,8 @@ function VoteModal(props: { server: Server, usesOslProtocol: boolean }) {
   )
 }
 
-export default function ServerCardModal(props: { server: Server, currentSort: string, usesOslProtocol: boolean }) {
+
+export default function ServerCardModal(props: { server: Server, currentSort: string, usesOslProtocol: boolean, updateServer: (server: Server) => void }) {
   return (
     <Dialog>
       {/* no asChild because it doesn't work */}
@@ -86,7 +91,12 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Server Info</DialogTitle>
+          <DialogTitle>
+            Server Info
+            {props.server.hasAdminKeys && (
+              <ServerAdminModal server={props.server} updateServer={props.updateServer} />
+            )}
+          </DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[150px] lg:h-[200px] w-full">
           <div className="flex flex-col gap-3">
@@ -138,7 +148,7 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
             >
               Visit Website
           </Button>
-          <VoteModal server={props.server} usesOslProtocol={props.usesOslProtocol} />
+          <VoteModal server={props.server} usesOslProtocol={props.usesOslProtocol} updateServer={props.updateServer} />
           {props.usesOslProtocol && !isMobile && (
             <Button 
               variant="outline"

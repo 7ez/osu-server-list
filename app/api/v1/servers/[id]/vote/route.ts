@@ -62,7 +62,6 @@ export async function POST(
       gte(ipVotesTable.lastVoted, twentyFourHoursAgo)
     ))
     .limit(1))[0];
-  console.log(recentIpVote);
 
   if (recentIpVote) {
     return NextResponse.json({ error: "You can only vote once every 24 hours" }, { status: 429 });
@@ -71,13 +70,16 @@ export async function POST(
   const recentUserVote = (await database
     .select()
     .from(votesTable)
-    .where(and(
-      eq(votesTable.serverId, serverId),
-      eq(votesTable.userId, serverUserId),
-      gte(votesTable.lastVoted, twentyFourHoursAgo)
-    ))
-    .limit(1))[0];
-  console.log(recentUserVote);
+    .where(
+      and(
+        eq(votesTable.serverId, serverId),
+        eq(votesTable.userId, serverUserId),
+        gte(votesTable.lastVoted, twentyFourHoursAgo)
+      )
+    )
+    .limit(1)
+  )[0];
+
   if (recentUserVote) {
     return NextResponse.json({ error: "You can only vote once every 24 hours" }, { status: 429 });
   }

@@ -45,6 +45,16 @@ export default function Home() {
     setShouldReload(!shouldReload);
   }
 
+  function updateServer(updatedServer: Server) {
+    const updatedServers = servers.map((server) => {
+      if (server.id === updatedServer.id) {
+        return updatedServer;
+      }
+      return server;
+    });
+    setServers(updatedServers);
+  }
+
   function updateSort(newSort: string) {
     updateSettings({ ...currentSettings, currentSort: newSort });
     const sortedServers: Server[] = [...servers];
@@ -90,7 +100,13 @@ export default function Home() {
           </>
         ) : (
           servers.map(server => {
-            return <ServerCardModal key={server.id} server={server} currentSort={currentSettings.currentSort} usesOslProtocol={currentSettings.usesOslProtocol} />;
+            return <ServerCardModal 
+              key={server.id} 
+              server={server} 
+              currentSort={currentSettings.currentSort} 
+              usesOslProtocol={currentSettings.usesOslProtocol}
+              updateServer={updateServer}
+            />;
           })
         )}
       </div>

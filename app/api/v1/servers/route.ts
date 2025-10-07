@@ -1,10 +1,20 @@
 import { database } from "@/lib/db";
-import { serversTable } from "@/lib/db/schema";
+import { serverAdminKeysTable, serversTable } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import { Server } from "@/types/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
-  const servers = await database.select().from(serversTable).all();
+  const servers = await database.select().from(serversTable).all() as Server[];
+
+  await Promise.all(servers.map(async (server) => {
+    server.hasAdminKeys = (await database
+      .select()
+      .from(serverAdminKeysTable)
+      .where(eq(serverAdminKeysTable.serverId, server.id))
+    ).length > 0;
+  }));
+
   return NextResponse.json(servers);
 }
 
@@ -28,5 +38,6 @@ export async function PUT(req: NextRequest) {
     .values(body)
     .returning()
     .get();
+
   return NextResponse.json(server, { status: 201 });
 }

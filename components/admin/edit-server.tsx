@@ -54,8 +54,9 @@ export default function AdminEditServer(props: { adminKey: string, server: Serve
       serverFeatureInput.current.value = "";
     }
 
-    const updatedServer = { ...props.server, features: serverFeatures, name: serverName, url: serverUrl, logoUrl: serverLogo, description: serverDescription };
-
+    const updatedServer = { ...props.server, features: serverFeatures.join(","), name: serverName, url: serverUrl, logoUrl: serverLogo, description: serverDescription };
+    delete updatedServer.hasAdminKeys;
+    
     fetch(`/api/v1/servers/${props.server.id}`, {
       method: "PATCH",
       headers: {
