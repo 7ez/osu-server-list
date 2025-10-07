@@ -8,7 +8,7 @@ import SettingsModal from "@/components/settings-modal";
 import { DEFAULT_SETTINGS, Settings } from "@/types/settings";
 import ServerCardModal from "@/components/server-modal";
 import { isMobile } from "react-device-detect";
-import { Server } from "@/app/generated/prisma";
+import { Server } from "@/types/server";
 
 export default function Home() {
   const [servers, setServers] = useState<Server[]>([]);

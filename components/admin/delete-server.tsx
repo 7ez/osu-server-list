@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-import { Server } from "@/app/generated/prisma";
+import { Server } from "@/types/server";
 
 
 export default function AdminDeleteServer(props: { adminKey: string, server: Server, reloadServers: () => void })

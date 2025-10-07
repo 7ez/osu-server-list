@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Server } from "@/app/generated/prisma";
+import { Server } from "@/types/server";
 
 export default function AdminEditServer(props: { adminKey: string, server: Server, reloadServers: () => void })
 {
@@ -20,12 +20,12 @@ export default function AdminEditServer(props: { adminKey: string, server: Serve
   const serverUrlInput = useRef<HTMLInputElement>(null);
   const serverLogoInput = useRef<HTMLInputElement>(null);
   const serverFeatureInput = useRef<HTMLInputElement>(null);
-  const [serverFeatures, setServerFeatures] = useState([...props.server.features]);
+  const [serverFeatures, setServerFeatures] = useState([...(props.server.features?.split(",")) || []]);
 
   function handleOpen(open: boolean) {
     if (!open && isEditing) return;
     // hacky way to reset features on cancel
-    if (!open) setServerFeatures([...props.server.features]);
+    if (!open) setServerFeatures([...(props.server.features?.split(",")) || []]);
     setIsOpen(open);
   }
 

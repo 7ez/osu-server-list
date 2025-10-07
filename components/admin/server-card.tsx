@@ -4,11 +4,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Server } from "@/types/server";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import AdminDeleteServer from "@/components/admin/delete-server";
 import AdminEditServer from "@/components/admin/edit-server";
+import { Server } from "@/types/server";
 
 export default function AdminServerCard(props: { server: Server, adminKey: string, reloadServers: () => void }) {
   return (
@@ -35,7 +35,7 @@ export default function AdminServerCard(props: { server: Server, adminKey: strin
               <div className="text-gray-600 inline-block ml-2 text-xs pb-[1px]">{props.server.onlineCount} Online</div> */}
             </CardTitle>
             <CardDescription className="flex flex-row flex-wrap">
-              {props.server.features.map((feature, idx) => {
+              {props.server.features?.split(",").map((feature, idx) => {
                 if (idx > 2) return null;
                 return (
                   <Badge key={props.server.id + feature} className="mr-1 mt-[3px] text-[10px] bg-green-300 text-gray-800 rounded-full">

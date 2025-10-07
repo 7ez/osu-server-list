@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "@/components/ui/badge";
 import { isMobile } from "react-device-detect";
-import { Server } from "@/app/generated/prisma";
+import { Server } from "@/types/server";
 
 export default function ServerCard(props: { server: Server, currentSort: string, usesOslProtocol: boolean }) {
   return (
@@ -43,7 +43,7 @@ export default function ServerCard(props: { server: Server, currentSort: string,
               )}
             </CardTitle>
             <CardDescription className="flex flex-row flex-wrap">
-              {props.server.features.map((feature, idx) => {
+              {props.server.features?.split(",").map((feature, idx) => {
                 // max 3, otherwise css boom
                 if (idx > 2) return null;
                 return (

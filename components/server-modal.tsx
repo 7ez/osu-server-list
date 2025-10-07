@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { isMobile } from "react-device-detect";
-import { Server } from "@/app/generated/prisma";
+import { Server } from "@/types/server";
 
 export default function ServerCardModal(props: { server: Server, currentSort: string, usesOslProtocol: boolean }) {
   return (
