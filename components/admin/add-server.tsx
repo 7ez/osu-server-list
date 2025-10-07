@@ -9,7 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { Server } from "@/app/generated/prisma";
+import { Server } from "@/types/server";
 
 
 export default function AdminAddServer(props: { adminKey: string, reloadServers: () => void })
@@ -60,7 +60,7 @@ export default function AdminAddServer(props: { adminKey: string, reloadServers:
       description: serverDescription,
       url: serverUrl,
       logoUrl: serverLogo,
-      features: serverFeatures,
+      features: serverFeatures.join(","),
     };
 
     fetch("/api/v1/servers", {

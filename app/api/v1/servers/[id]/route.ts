@@ -1,66 +1,86 @@
+import { database } from "@/lib/db";
+import { serversTable } from "@/lib/db/schema";
+import { Server } from "@/types/server";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient, Server } from "@/app/generated/prisma";
 
-const prisma = new PrismaClient();
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const serverId = parseInt(id, 10);
 
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-    const serverId = parseInt(id, 10);
+  if (isNaN(serverId)) {
+    return NextResponse.json({ error: "Invalid server ID" }, { status: 400 });
+  }
 
-    if (isNaN(serverId)) {
-        return NextResponse.json({ error: "Invalid server ID" }, { status: 400 });
-    }
+  const adminKey = req.headers.get("x-admin-key");
+  if (adminKey !== process.env.ADMIN_KEY) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    const adminKey = req.headers.get("x-admin-key");
-    if (adminKey !== process.env.ADMIN_KEY) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const body: Partial<Server> = await req.json();
 
-    const body: Partial<Server> = await req.json();
+  if (body.id && body.id !== serverId) {
+    return NextResponse.json(
+      { error: "ID in body does not match URL parameter" },
+      { status: 400 }
+    );
+  }
 
-    if (body.id && body.id !== serverId) {
-        return NextResponse.json({ error: "ID in body does not match URL parameter" }, { status: 400 });
-    }
+  const server = (
+    await database
+      .select()
+      .from(serversTable)
+      .where(eq(serversTable.id, serverId))
+      .limit(1)
+  )[0];
 
-    const server = await prisma.server.findUnique({
-        where: { id: serverId }
-    });
+  if (!server) {
+    return NextResponse.json({ error: "Server not found" }, { status: 404 });
+  }
 
-    if (!server) {
-        return NextResponse.json({ error: "Server not found" }, { status: 404 });
-    }
+  const updatedServer = await database
+    .update(serversTable)
+    .set(body)
+    .where(eq(serversTable.id, serverId))
+    .returning()
+    .get();
 
-    const updatedServer = await prisma.server.update({
-        where: { id: serverId },
-        data: body
-    });
-
-    return NextResponse.json(updatedServer);
+  return NextResponse.json(updatedServer);
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-    const serverId = parseInt(id, 10);
-    if (isNaN(serverId)) {
-        return NextResponse.json({ error: "Invalid server ID" }, { status: 400 });
-    }
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const serverId = parseInt(id, 10);
+  if (isNaN(serverId)) {
+    return NextResponse.json({ error: "Invalid server ID" }, { status: 400 });
+  }
 
-    const adminKey = req.headers.get("x-admin-key");
-    if (adminKey !== process.env.ADMIN_KEY) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const adminKey = req.headers.get("x-admin-key");
+  if (adminKey !== process.env.ADMIN_KEY) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    const server = await prisma.server.findUnique({
-        where: { id: serverId }
-    });
+  const server = (
+    await database
+      .select()
+      .from(serversTable)
+      .where(eq(serversTable.id, serverId))
+      .limit(1)
+  )[0];
 
-    if (!server) {
-        return NextResponse.json({ error: "Server not found" }, { status: 404 });
-    }
+  if (!server) {
+    return NextResponse.json({ error: "Server not found" }, { status: 404 });
+  }
 
-    await prisma.server.delete({
-        where: { id: serverId }
-    });
+  await database
+    .delete(serversTable)
+    .where(eq(serversTable.id, serverId));
 
-    return NextResponse.json({ message: "Server deleted" }, { status: 200 });
+  return NextResponse.json({ message: "Server deleted" }, { status: 200 });
 }
