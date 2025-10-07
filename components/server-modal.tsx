@@ -22,7 +22,7 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
         </DialogHeader>
         <ScrollArea className="h-[150px] lg:h-[200px] w-full">
           <div className="flex flex-col gap-3">
-              <div className="flex flex-row gap-2 items-center">
+              <div className="flex flex-row gap-2">
                 <Image
                   src={props.server.logoUrl}
                   alt={`${props.server.name} logo`}
@@ -67,16 +67,15 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
         <div className="flex flex-row gap-1 w-full">
           <Button 
             onClick={() => window.open(`https://${props.server.url}`, "_blank")} 
-            variant="outline" 
-            className={`${props.usesOslProtocol && !isMobile ? "w-1/2" : "w-full"}`}
+            className={`${props.usesOslProtocol && !isMobile ? "w-1/2" : "w-full"} hover:cursor-pointer`}
             >
               Visit Website
           </Button>
           {props.usesOslProtocol && !isMobile && (
             <Button 
-              variant="outline"
+              variant="secondary"
               onClick={() => window.open(`osl://launch/${props.server.url}`)}
-              className="w-1/2"
+              className="w-1/2 hover:cursor-pointer"
             >Launch with OSL</Button>
           )}
         </div>
