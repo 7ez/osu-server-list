@@ -5,9 +5,77 @@ import { faCheckToSlot, faKeyboard, faUser } from "@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { isMobile } from "react-device-detect";
 import { Server } from "@/types/server";
+import { Input } from "@/components/ui/input";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+
+function VoteModal(props: { server: Server, usesOslProtocol: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const userIdInput = useRef<HTMLInputElement>(null);
+
+  function handleVote() {
+    const userId = parseInt(userIdInput.current?.value || "");
+    if (isNaN(userId)) return;
+
+    fetch(`/api/v1/servers/${props.server.id}/vote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId: userId })
+    }).then(res => {
+      if (res.status === 200) {
+        toast.success("Vote submitted successfully!");
+        setIsOpen(false);
+      } else {
+        if (res.status === 429) {
+          toast.warning("You can only vote once every 24 hours.");
+        } else {
+          toast.error("Failed to submit vote.");
+        }
+      }
+    });
+  }
+
+  function handleOpen(open: boolean) {
+    if (!open && userIdInput.current?.value) {
+      userIdInput.current.value = "";
+    }
+    setIsOpen(open);
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleOpen}>
+      <DialogTrigger asChild>
+        <Button 
+          variant="secondary" 
+          className={`${props.usesOslProtocol && !isMobile ? "w-1/3" : "w-1/2"} hover:cursor-pointer`}
+        >
+          Vote
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Vote for {props.server.name}</DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col gap-3 pt-4 pb-6">
+          <div className="flex flex-row gap-2 items-center">
+            <FontAwesomeIcon icon={faUser} />
+            <Label htmlFor="user-id" className="text-sm">User ID</Label>
+          </div>
+          <Input name="user-id" type="number" placeholder="eg. 123" className="mb-4" ref={userIdInput} />
+        </div>
+        <div className="flex flex-row gap-2 w-full">
+          <Button onClick={handleVote} className="w-1/2 hover:cursor-pointer">Submit Vote</Button>
+          <Button onClick={() => handleOpen(false)} variant="secondary" className="w-1/2 hover:cursor-pointer">Cancel</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 export default function ServerCardModal(props: { server: Server, currentSort: string, usesOslProtocol: boolean }) {
   return (
@@ -56,7 +124,6 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
               <div className="flex flex-row gap-24 items-center">
                 <div className="flex flex-row gap-2">
                   <span className="font-bold">{props.server.votes}</span>
-                  <Button variant="ghost" className="px-2 h-6 hover:cursor-pointer">Vote!</Button>
                 </div>
                 <div className="flex flex-row gap-2">
                   <span className="font-bold">-1</span>
@@ -67,15 +134,16 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
         <div className="flex flex-row gap-1 w-full">
           <Button 
             onClick={() => window.open(`https://${props.server.url}`, "_blank")} 
-            className={`${props.usesOslProtocol && !isMobile ? "w-1/2" : "w-full"} hover:cursor-pointer`}
+            className={`${props.usesOslProtocol && !isMobile ? "w-1/3" : "w-full"} hover:cursor-pointer`}
             >
               Visit Website
           </Button>
+          <VoteModal server={props.server} usesOslProtocol={props.usesOslProtocol} />
           {props.usesOslProtocol && !isMobile && (
             <Button 
-              variant="secondary"
+              variant="outline"
               onClick={() => window.open(`osl://launch/${props.server.url}`)}
-              className="w-1/2 hover:cursor-pointer"
+              className="w-1/3 hover:cursor-pointer"
             >Launch with OSL</Button>
           )}
         </div>

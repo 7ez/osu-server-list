@@ -23,8 +23,6 @@ export async function PUT(req: NextRequest) {
     );
   }
 
-  console.log(body)
-
   const server = await database
     .insert(serversTable)
     .values(body)

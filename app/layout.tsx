@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "osu! server list",
-  description: "no bullshit voting, just the most played servers.",
+  description: "A curated list of active osu! private servers.",
 };
 
 export default function RootLayout({
