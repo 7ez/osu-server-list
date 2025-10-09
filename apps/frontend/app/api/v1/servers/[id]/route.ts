@@ -2,7 +2,7 @@ import { database } from "@/lib/db";
 import { serverAdminKeysTable, serversTable } from "@/lib/db/schema";
 import { Server } from "@/types/server";
 import { ServerAdminKey } from "@/types/server-admin-key";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
@@ -37,17 +37,21 @@ export async function PATCH(
   if (!server) {
     return NextResponse.json({ error: "Server not found" }, { status: 404 });
   }
-
+  
+  const adminKey = req.headers.get("x-admin-key") || "";
   const serverAdminKey: ServerAdminKey | undefined = (
     await database
       .select()
       .from(serverAdminKeysTable)
-      .where(eq(serverAdminKeysTable.serverId, serverId))
-      .limit(1)
+      .where(
+        and(
+          eq(serverAdminKeysTable.serverId, serverId),
+          eq(serverAdminKeysTable.adminKey, adminKey)
+        )
+      )
   )[0];
 
-  const adminKey = req.headers.get("x-admin-key");
-  if (adminKey !== process.env.ADMIN_KEY && (!serverAdminKey || adminKey !== serverAdminKey.adminKey)) {
+  if (adminKey !== process.env.ADMIN_KEY && !serverAdminKey) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   
@@ -62,7 +66,6 @@ export async function PATCH(
     .select()
     .from(serverAdminKeysTable)
     .where(eq(serverAdminKeysTable.serverId, server.id))
-    .limit(1)
   ).length > 0;
 
   return NextResponse.json(updatedServer);
