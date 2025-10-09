@@ -144,7 +144,7 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
         <div className="flex flex-row gap-1 w-full">
           <Button 
             onClick={() => window.open(`https://${props.server.url}`, "_blank")} 
-            className={`${props.usesOslProtocol && !isMobile ? "w-1/3" : "w-full"} hover:cursor-pointer`}
+            className={`${props.usesOslProtocol && !isMobile ? "w-1/3" : "w-1/2"} hover:cursor-pointer`}
             >
               Visit Website
           </Button>
