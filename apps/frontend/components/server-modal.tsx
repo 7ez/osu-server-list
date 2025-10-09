@@ -1,7 +1,7 @@
 import ServerCard from "@/components/server-card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { faCheckToSlot, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar, faCheckToSlot, faUser, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -11,7 +11,9 @@ import { Server } from "@/types/server";
 import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { ServerAdminModal } from "./server-admin-modal";
+import { ServerAdminModal } from "@/components/server-admin-modal";
+import TimeAgo from "react-timeago";
+import { Badge } from "@/components/ui/badge";
 
 // move to diff file
 function VoteModal(props: { server: Server, usesOslProtocol: boolean, updateServer: (server: Server) => void }) {
@@ -54,8 +56,8 @@ function VoteModal(props: { server: Server, usesOslProtocol: boolean, updateServ
   return (
     <Dialog open={isOpen} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="secondary" 
+        <Button
+          variant="secondary"
           className={`${props.usesOslProtocol && !isMobile ? "w-1/3" : "w-1/2"} hover:cursor-pointer`}
         >
           Vote
@@ -100,57 +102,81 @@ export default function ServerCardModal(props: { server: Server, currentSort: st
         </DialogHeader>
         <ScrollArea className="h-[150px] lg:h-[200px] w-full">
           <div className="flex flex-col gap-3">
-              <div className="flex flex-row gap-2">
-                <Image
-                  src={props.server.logoUrl}
-                  alt={`${props.server.name} logo`}
-                  width={64}
-                  height={64}
-                  className="rounded max-w-16 max-h-16 object-contain"
-                />
-                <div className="flex flex-col flex-wrap">
-                  <h2 className="text-xl font-bold">{props.server.name}</h2>
-                  <span className="text-sm text-gray-500">
-                    {props.server.description}
-                  </span>
-                </div>
+            <div className="flex flex-row gap-2">
+              <Image
+                src={props.server.logoUrl}
+                alt={`${props.server.name} logo`}
+                width={64}
+                height={64}
+                className="rounded max-w-16 max-h-16 object-contain"
+              />
+              <div className="flex flex-col flex-wrap">
+                <h2 className="text-xl font-bold">{props.server.name}</h2>
+                <span className="text-sm text-gray-500">
+                  {props.server.description}
+                </span>
               </div>
-              {/* <Textarea 
+            </div>
+            {/* <Textarea 
                 readOnly              
                 name="server-description" 
                 defaultValue={props.server.description}
                 className="hover:cursor-default"
               /> */}
-              <div className="flex flex-row gap-12 items-center pt-2">
-                <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-8 pt-2 items-center">
+              <div className="flex flex-col items-start">
+                <div className="flex flex-row gap-2 items-center">
                   <FontAwesomeIcon width={16} height={16} icon={faCheckToSlot} />
                   <Label className="font-semibold">Votes</Label>
                 </div>
-                <div className="flex flex-row gap-2">
+                <span className="font-bold mt-2">{props.server.votes}</span>
+              </div>
+              <div className="flex flex-col items-start">
+                <div className="flex flex-row gap-2 items-center">
                   <FontAwesomeIcon width={16} height={16} icon={faUser} />
                   <Label className="font-semibold">Online Users</Label>
                 </div>
+                <span className="font-bold mt-2">-1</span>
               </div>
-              <div className="flex flex-row gap-24 items-center">
-                <div className="flex flex-row gap-2">
-                  <span className="font-bold">{props.server.votes}</span>
+              <div className="flex flex-col items-start">
+                <div className="flex flex-row gap-2 items-center">
+                  <FontAwesomeIcon width={16} height={16} icon={faCalendar} />
+                  <Label className="font-semibold">Listed Since</Label>
                 </div>
-                <div className="flex flex-row gap-2">
-                  <span className="font-bold">-1</span>
+                <div className="font-bold mt-2">
+                  <TimeAgo date={new Date(props.server.createdAt)} />
                 </div>
               </div>
+            </div>
+            <div className="flex flex-row gap-8 pt-4 items-center">
+              {props.server.features && (
+                <div className="flex flex-col items-start">
+                  <div className="flex flex-row gap-2 items-center">
+                    <FontAwesomeIcon width={16} height={16} icon={faCheckToSlot} />
+                    <Label className="font-semibold">Features</Label>
+                  </div>
+                  <div className="mt-2 flex flex-row flex-wrap w-[150px]">
+                    {props.server.features.split(",").map((feature, index) => (
+                      <Badge key={index} className="mr-1 mt-[3px] text-[10px] bg-green-300 text-gray-800 rounded-full">
+                        {feature}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </ScrollArea>
         <div className="flex flex-row gap-1 w-full">
-          <Button 
-            onClick={() => window.open(`https://${props.server.url}`, "_blank")} 
+          <Button
+            onClick={() => window.open(`https://${props.server.url}`, "_blank")}
             className={`${props.usesOslProtocol && !isMobile ? "w-1/3" : "w-1/2"} hover:cursor-pointer`}
-            >
-              Visit Website
+          >
+            Visit Website
           </Button>
           <VoteModal server={props.server} usesOslProtocol={props.usesOslProtocol} updateServer={props.updateServer} />
           {props.usesOslProtocol && !isMobile && (
-            <Button 
+            <Button
               variant="outline"
               onClick={() => window.open(`osl://launch/${props.server.url}`)}
               className="w-1/3 hover:cursor-pointer"
