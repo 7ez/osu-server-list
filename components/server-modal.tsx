@@ -1,7 +1,7 @@
 import ServerCard from "@/components/server-card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { faCheckToSlot, faEdit, faKeyboard, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCheckToSlot, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";

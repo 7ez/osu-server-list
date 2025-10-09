@@ -13,14 +13,14 @@ import { Server } from "@/types/server";
 export default function Home() {
   const [servers, setServers] = useState<Server[]>([]);
   const [isLoading, setLoading] = useState(true);
-  const [shouldReload, setShouldReload] = useState(false);
   const [currentSettings, setCurrentSettings] = useState<Settings>(DEFAULT_SETTINGS);
 
   function updateSettings(newSettings: Settings, reloadServers: boolean = false) {
     localStorage.setItem("settings", JSON.stringify(newSettings));
     setCurrentSettings(newSettings);
     if (reloadServers) {
-      setShouldReload(!shouldReload);
+      setLoading(true);
+      setServers([]);
     }
   }
 
@@ -28,21 +28,17 @@ export default function Home() {
     const storedSettings = localStorage.getItem("settings") || JSON.stringify(DEFAULT_SETTINGS);
     setCurrentSettings(JSON.parse(storedSettings));
 
-    if (servers.length > 0) {
-      setLoading(true);
-      setServers([]);
-    }
-
     fetch("/api/v1/servers")
       .then((res) => res.json())
       .then((data) => {
         setServers(data);
         setLoading(false);
       })
-  }, [shouldReload]);
+  }, [servers.length]);
 
   function reloadData() {
-    setShouldReload(!shouldReload);
+    setLoading(true);
+    setServers([]);
   }
 
   function updateServer(updatedServer: Server) {
